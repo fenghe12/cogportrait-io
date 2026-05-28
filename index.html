@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CogPortrait: Fine-Grained Eye-Region Control in Portrait Animation via Hierarchical Agent Planning</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .banner {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 5rem 0 3rem;
+        }
+        .banner-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        .banner-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 1.5rem;
+        }
+        .venue-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .affiliations {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .note-text {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+        th, td {
+            padding: 0.5rem 0.6rem;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+        tr.best-row {
+            background: #e8f0fe;
+            font-weight: 600;
+        }
+        .video-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .video-card {
+            background: #fff;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .video-card video {
+            width: 100%;
+            display: block;
+        }
+        .video-card .video-label {
+            padding: 0.8rem 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        .video-card .video-desc {
+            padding: 0 1rem 1rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #1a1a2e;
+        }
+        .section-title i {
+            margin-right: 0.5rem;
+            color: #0f3460;
+        }
+        .result-figure {
+            width: 100%;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+        .result-figure img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .figure-caption {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-logo"><h2>CogPortrait</h2></div>
+        <div class="nav-links">
+            <a href="#overview">Abstract</a>
+            <a href="#teaser-fig">Overview</a>
+            <a href="#pipeline">Pipeline</a>
+            <a href="#results">Results</a>
+            <a href="#videos">Videos</a>
+            <a href="#citation">Citation</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Banner -->
+<section class="banner">
+    <div class="banner-content">
+        <div class="banner-text">
+            <h2 class="banner-title">CogPortrait: Fine-Grained Eye-Region Control in Portrait Animation via Hierarchical Agent Planning</h2>
+            <div class="authors">
+                <a href="#">He Feng<sup>1</sup></a>,
+                <a href="#">Yongjia Ma<sup>2</sup></a>,
+                <a href="#">Donglin Di<sup>2</sup></a>,
+                <a href="#">Lei Fan<sup>3,&dagger;</sup></a>,
+                <a href="#">Tonghua Su<sup>1,&dagger;</sup></a>
+            </div>
+            <div class="affiliations">
+                <sup>1</sup> Harbin Institute of Technology &nbsp;&nbsp;
+                <sup>2</sup> Li Auto &nbsp;&nbsp;
+                <sup>3</sup> University of New South Wales
+            </div>
+            <div class="note-text">&dagger; Corresponding authors</div>
+            <div class="banner-links" style="margin-top: 1.5rem;">
+                <a href="https://arxiv.org/abs/2605.28056" target="_blank" class="link-btn"><i class="fas fa-file-pdf"></i> arXiv</a>
+                <a href="assets/CogPortrait_supp.pdf" target="_blank" class="link-btn"><i class="fas fa-file-alt"></i> Supplementary</a>
+                <a href="#" class="link-btn"><i class="fab fa-github"></i> Code (Coming Soon)</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TL;DR -->
+<section class="main-demo">
+    <div class="container">
+        <div class="tldr-content">
+            <p><i class="fas fa-bolt"></i> <strong>TL;DR:</strong>
+            CogPortrait generates portrait animations with fine-grained eye-region control from high-level labels. A three-agent MLLM pipeline compiles labels into facial keypoints via temporal event planning, prototype retrieval, and physiological constraint enforcement. A DiT-based backbone with dynamic CFG and KTO refinement synthesizes the final video. The EMH benchmark covers 12 categories (6 emotions + 6 beyond-emotion states) with AU-level metrics for evaluating eye-region and head-motion control.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Abstract -->
+<section id="overview" class="abstract" style="text-align: left;">
+    <div class="container">
+        <div class="abstract-content" style="text-align: left;">
+            <h3><i class="fas fa-file-alt"></i> Abstract</h3>
+            <p>
+            Portrait animation methods have achieved substantial visual quality and lip synchronization, but fine-grained manipulation of the eye region still faces a trade-off between input granularity and motion accuracy. Existing methods using emotion labels or coarse text prompts are insufficient for describing subtle ocular dynamics, whereas approaches based on Action Units or driving videos provide higher fidelity at the cost of a heavier input burden. These limitations are still restrictive for beyond-emotion states (e.g., thinking) and drowsiness. In light of the above, we propose <strong>CogPortrait</strong>, a two-stage framework that generates portrait animations from high-level labels. In the first stage, three chain-of-thought Multimodal Large Language Models (MLLMs) agents compile high-level labels into facial keypoints through temporal event planning, prototype retrieval and composition from a real-behavior library, and semantic-physiological constraint enforcement. In the second stage, a DiT-based video generation backbone synthesizes the final animation conditioned on the keypoints, reference portrait, audio, and text prompt, enhanced by a dynamic classifier-free guidance strategy with eye-region-aware reweighting and KTO-based refinement for boundary cases. We further introduce the <strong>EMH benchmark</strong> covering diverse emotions and beyond-emotion categories with two AU-level metrics for evaluating fine-grained eye-region and head-motion control. Extensive experiments on HDTF and the EMH benchmark demonstrate that CogPortrait achieves more precise eye-region control than existing methods while maintaining superior visual quality and identity consistency.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Teaser Figure (Paper Figure 1) -->
+<section id="teaser-fig" style="text-align: left; padding: 4rem 0;">
+    <div class="container">
+        <h2 class="section-title"><i class="fas fa-lightbulb"></i> Motivation &amp; Overview</h2>
+        <div class="result-figure" style="background: linear-gradient(135deg, #f8fafc 0%, #e8f0fe 100%); padding: 2rem; border-radius: 1rem;">
+            <img src="assets/images/new-figure1.png" alt="CogPortrait Overview" style="box-shadow: 0 4px 24px rgba(0,0,0,0.1); border-radius: 0.75rem;">
+        </div>
+        <p style="text-align: left; color: #555; font-size: 0.9rem; margin-top: 0.8rem;">
+            <strong>Figure 1.</strong> Left: comparison of prior label-driven and motion-driven methods with CogPortrait, highlighting direct fine-grained eye-region control from high-level labels. Center: radar-chart comparison with baselines on the EMH benchmark, where larger areas indicate better performance. Right: OOD cases generated by CogPortrait, including fine-grained instruction, laughter, cognitive effort, drowsiness, large-angle head movement, and control of gaze and eyebrow motion.
+        </p>
+    </div>
+</section>
+
+<!-- Pipeline (Paper Figure 2-3) -->
+<section id="pipeline" style="text-align: left; padding: 3rem 0; background: #fafafa;">
+    <div class="container">
+        <h2 class="section-title"><i class="fas fa-diagram-project"></i> Technical Pipeline</h2>
+        <div class="result-figure">
+            <img src="assets/images/figure2-3.png" alt="CogPortrait Pipeline Architecture">
+        </div>
+        <p style="text-align: left; color: #555; font-size: 0.9rem; margin-top: 0.5rem;">
+            <strong>Figure 2.</strong> Overview of the proposed CogPortrait framework. Stage 1 compiles a high-level label, a reference portrait, and optional fine-grained instructions into facial keypoints through four layers: Event Planning, CoT Composition Agent (prototype retrieval), Critic Agent (semantic-physiological checks), and a Mapping Layer (keypoint projection). Stage 2 generates the final portrait animation from the reference portrait, driving audio, a text prompt, and the facial keypoints via a DiT-based backbone with dynamic CFG and eye-region-aware reweighting, refined by KTO for boundary cases.
+        </p>
+    </div>
+</section>
+
+<!-- Results -->
+<section id="results" class="results-section">
+    <div class="container">
+        <h2 class="section-title"><i class="fas fa-chart-bar"></i> Results</h2>
+
+        <!-- HDTF Table -->
+        <div class="result-item">
+            <div class="result-info">
+                <h3>Quantitative Comparison on HDTF</h3>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr><th>Method</th><th>FID &darr;</th><th>FVD &darr;</th><th>LPIPS &darr;</th><th>Sync-C &uarr;</th><th>ID-Sim &uarr;</th><th>Eye-LMD &darr;</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>EDTalk</td><td>98.77</td><td>142.88</td><td>0.1749</td><td>5.67</td><td>0.8336</td><td>0.0210</td></tr>
+                        <tr><td>Follow-Your-Emoji</td><td>18.22</td><td>72.11</td><td>0.0929</td><td>4.83</td><td>0.8609</td><td>0.0173</td></tr>
+                        <tr><td>Sonic</td><td>24.66</td><td>51.65</td><td>0.1075</td><td>7.43</td><td>0.8609</td><td>0.0363</td></tr>
+                        <tr><td>Hallo3</td><td>53.85</td><td>45.76</td><td>0.1885</td><td>5.92</td><td>0.8622</td><td>0.0255</td></tr>
+                        <tr><td>HunyuanPortrait</td><td>18.68</td><td>39.79</td><td>0.0962</td><td>6.22</td><td>0.8837</td><td>0.0293</td></tr>
+                        <tr><td>FantasyTalking</td><td>44.79</td><td>51.46</td><td>0.0887</td><td>6.95</td><td>0.8957</td><td>0.0346</td></tr>
+                        <tr><td>FLOAT</td><td>72.77</td><td>99.25</td><td>0.2676</td><td>6.92</td><td>0.7651</td><td>0.0781</td></tr>
+                        <tr><td>ACTalker</td><td>27.92</td><td>37.64</td><td>0.1934</td><td>7.02</td><td>0.8651</td><td>0.0217</td></tr>
+                        <tr class="best-row"><td><strong>Ours</strong></td><td><strong>16.68</strong></td><td><strong>32.90</strong></td><td><strong>0.0633</strong></td><td>7.15</td><td><strong>0.9214</strong></td><td><strong>0.0107</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- EMH Benchmark Table -->
+        <div class="result-item">
+            <div class="result-info">
+                <h3>Performance on the EMH Benchmark</h3>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr><th>Method</th><th>BRISQUE &darr;</th><th>DSL-FIQA &uarr;</th><th>ID-Sim &uarr;</th><th>Eye-LMD &darr;</th><th>AU-F1 &uarr;</th><th>AU-Temp &uarr;</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>EDTalk</td><td>49.74</td><td>0.3838</td><td>0.8601</td><td>0.0313</td><td>0.5449</td><td>0.5255</td></tr>
+                        <tr><td>Follow-Your-Emoji</td><td>47.52</td><td>0.4144</td><td>0.8843</td><td>0.0237</td><td>0.8816</td><td>0.6936</td></tr>
+                        <tr><td>Sonic</td><td>52.59</td><td>0.4761</td><td>0.9044</td><td>0.0395</td><td>0.5707</td><td>0.5249</td></tr>
+                        <tr><td>Hallo3</td><td>50.15</td><td>0.4625</td><td>0.8964</td><td>0.0393</td><td>0.5487</td><td>0.4566</td></tr>
+                        <tr><td>HunyuanPortrait</td><td>49.80</td><td>0.4859</td><td>0.9019</td><td>0.0192</td><td>0.9145</td><td>0.7475</td></tr>
+                        <tr><td>FantasyTalking</td><td>53.21</td><td>0.4598</td><td>0.9067</td><td>0.0305</td><td>0.5554</td><td>0.4758</td></tr>
+                        <tr><td>FLOAT</td><td>46.33</td><td>0.4710</td><td>0.8580</td><td>0.0746</td><td>0.5297</td><td>0.3251</td></tr>
+                        <tr><td>ACTalker</td><td>61.17</td><td>0.4686</td><td>0.7308</td><td>0.0534</td><td>0.5212</td><td>0.3188</td></tr>
+                        <tr class="best-row"><td>Ours (GT)</td><td>32.84</td><td>0.5192</td><td>0.9362</td><td>0.0112</td><td>0.9303</td><td>0.7830</td></tr>
+                        <tr class="best-row"><td>Ours (Inverted)</td><td>32.73</td><td>0.5266</td><td>0.9217</td><td>0.0133</td><td>0.9192</td><td>0.7791</td></tr>
+                        <tr class="best-row"><td><strong>Ours (Full)</strong></td><td><strong>34.20</strong></td><td><strong>0.5184</strong></td><td><strong>0.9129</strong></td><td><strong>0.0145</strong></td><td><strong>0.9017</strong></td><td><strong>0.7397</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Qualitative -->
+        <div class="result-item">
+            <div class="result-info">
+                <h3>Qualitative Comparison</h3>
+                <p>Comparison on HDTF (left) and the EMH benchmark (right) against representative baselines. Red boxes highlight typical failure cases. Zoom in for details.</p>
+            </div>
+            <div class="result-figure">
+                <img src="assets/images/qualitative-fewer.png" alt="Qualitative Comparison">
+            </div>
+        </div>
+
+        <!-- Ablation: CFG -->
+        <div class="result-item">
+            <div class="result-info">
+                <h3>Ablation Study: Dynamic CFG Strategy</h3>
+                <p>Comparison of CFG strategies on images with pure green backgrounds. A single global CFG scale causes undesired color shift in both background and facial regions, while our dynamic CFG with eye-region-aware reweighting alleviates this issue.</p>
+            </div>
+            <div class="result-figure">
+                <img src="assets/images/colors2.png" alt="CFG Ablation" style="max-width: 80%; margin: 0 auto;">
+            </div>
+        </div>
+
+        <!-- Ablation: KTO -->
+        <div class="result-item">
+            <div class="result-info">
+                <h3>Ablation Study: KTO Refinement</h3>
+                <p>KTO refinement on asymmetric eyebrow control and identity consistency under large-angle head movements. Red boxes highlight key local regions.</p>
+            </div>
+            <div class="result-figure">
+                <img src="assets/images/kto.png" alt="KTO Ablation">
+            </div>
+        </div>
+
+        <!-- EMH Benchmark Figure -->
+        <div class="result-item">
+            <div class="result-info">
+                <h3>EMH Benchmark Overview</h3>
+                <p>The EMH benchmark contains 12 categories (6 core emotions + 6 beyond-emotion states) with video-duration distribution, face-region resolution distribution, and representative samples across categories.</p>
+            </div>
+            <div class="result-figure">
+                <img src="assets/images/figure3.png" alt="EMH Benchmark">
+            </div>
+        </div>
+
+        <!-- Ablation Table -->
+        <div class="result-item">
+            <div class="result-info">
+                <h3>Ablation Study: Quantitative Results</h3>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr><th>Variant</th><th>BRISQUE &darr;</th><th>DSL-FIQA &uarr;</th><th>ID-Sim &uarr;</th><th>Eye-LMD &darr;</th><th>AU-F1 &uarr;</th><th>AU-Temp &uarr;</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="7" style="text-align:left; font-weight:600; background:#f9f9f9;">Stage-1 Ablation</td></tr>
+                        <tr><td>Direct label-to-keypoints</td><td>40.25</td><td>0.4092</td><td>0.8803</td><td>0.0253</td><td>0.8535</td><td>0.5676</td></tr>
+                        <tr><td>Rule-based retrieval</td><td>39.31</td><td>0.4488</td><td>0.8817</td><td>0.0224</td><td>0.8812</td><td>0.5899</td></tr>
+                        <tr><td>Agent 1 only</td><td>36.78</td><td>0.4785</td><td>0.8834</td><td>0.0195</td><td>0.8346</td><td>0.7112</td></tr>
+                        <tr><td>Agent 1 + Agent 2 w/o Critic</td><td>34.83</td><td>0.5081</td><td>0.8932</td><td>0.0173</td><td>0.8821</td><td>0.7135</td></tr>
+                        <tr><td colspan="7" style="text-align:left; font-weight:600; background:#f9f9f9;">Stage-2 CFG Ablation</td></tr>
+                        <tr><td>Fixed CFG (s=3.5)</td><td>34.73</td><td>0.5062</td><td>0.8876</td><td>0.0207</td><td>0.8823</td><td>0.7275</td></tr>
+                        <tr><td>Temporal reweighting only</td><td>34.51</td><td>0.5078</td><td>0.9073</td><td>0.0193</td><td>0.8835</td><td>0.7301</td></tr>
+                        <tr><td>Spatial reweighting only</td><td>34.35</td><td>0.5139</td><td>0.8945</td><td>0.0158</td><td>0.8903</td><td>0.7368</td></tr>
+                        <tr class="best-row"><td><strong>Full Pipeline</strong></td><td><strong>34.20</strong></td><td><strong>0.5184</strong></td><td><strong>0.9129</strong></td><td><strong>0.0145</strong></td><td><strong>0.9017</strong></td><td><strong>0.7397</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Video Gallery -->
+<section id="videos" style="text-align: left; padding: 3rem 0; background: #fafafa;">
+    <div class="container">
+        <h2 class="section-title"><i class="fas fa-play-circle"></i> Supplementary Videos</h2>
+        <div class="video-gallery">
+            <div class="video-card">
+                <video controls playsinline muted loop preload="metadata">
+                    <source src="assets/videos/cases1.mp4" type="video/mp4">
+                </video>
+                <div class="video-label">EMH Benchmark: 12 Categories</div>
+                <div class="video-desc">Results across all 12 categories of the EMH benchmark, including 6 core emotions and 6 beyond-emotion states (cognitive effort, drowsiness, social engagement, etc.).</div>
+            </div>
+            <div class="video-card">
+                <video controls playsinline muted loop preload="metadata">
+                    <source src="assets/videos/cases2.mp4" type="video/mp4">
+                </video>
+                <div class="video-label">Large-Angle Head Movements</div>
+                <div class="video-desc">Demonstration of CogPortrait handling large-angle variations including near-profile poses with preserved identity consistency.</div>
+            </div>
+            <div class="video-card">
+                <video controls playsinline muted loop preload="metadata">
+                    <source src="assets/videos/cases3.mp4" type="video/mp4">
+                </video>
+                <div class="video-label">Fine-Grained Eye-Region Control</div>
+                <div class="video-desc">Precise control over gaze direction, eyebrow motion, blink patterns, and asymmetric expressions from high-level labels.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Citation -->
+<section id="citation" class="citation">
+    <div class="container">
+        <h2 class="section-title">Citation</h2>
+        <div class="citation-box">
+            <pre><code>@misc{feng2026cogportrait,
+    title={CogPortrait: Fine-Grained Eye-Region Control in Portrait Animation via Hierarchical Agent Planning},
+    author={He Feng and Yongjia Ma and Donglin Di and Lei Fan and Tonghua Su},
+    year={2026},
+    eprint={2605.28056},
+    archivePrefix={arXiv},
+    primaryClass={cs.CV}
+}</code></pre>
+        </div>
+    </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
